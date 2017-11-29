@@ -1,9 +1,23 @@
 <?php
 
+use yii\helpers\ArrayHelper;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
-$config = [
+Yii::setAlias('@tests', dirname(__DIR__) . '/tests');
+
+return [
+    'id' => 'app-console',
+    'bootstrap' => ['gii'],
+    'controllerNamespace' => 'app\commands',
+    'modules' => [
+        'gii' => 'yii\gii\Module',
+    ],
+];
+
+
+/*$config = [
     'id' => 'basic-console',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
@@ -35,14 +49,18 @@ $config = [
             ],
         ],
     ],
-    'params' => $params,
-    /*
-    'controllerMap' => [
-        'fixture' => [ // Fixture generation command line.
-            'class' => 'yii\faker\FixtureController',
-        ],
+    $params = ArrayHelper::merge(
+        require(__DIR__ . '/params.php'),
+        require(__DIR__ . '/params-local.php')
+    )
+
+/*
+'controllerMap' => [
+    'fixture' => [ // Fixture generation command line.
+        'class' => 'yii\faker\FixtureController',
     ],
-    */
+],
+
 ];
 
 if (YII_ENV_DEV) {
@@ -51,6 +69,6 @@ if (YII_ENV_DEV) {
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
     ];
-}
+}*/
 
-return $config;
+//return $config;

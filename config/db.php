@@ -1,14 +1,16 @@
 <?php
 
+/* @var array $settings */
+
+$settings = parse_ini_file('settings.ini', true);
+
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=yii2basic',
-    'username' => 'root',
-    'password' => '',
+    'dsn' => "mysql:host={$settings['Database']['host']};port={$settings['Database']['port']};dbname={$settings['Database']['dbname']}",
+    'username' => $settings['Database']['user'],
+    'password' => $settings['Database']['password'],
     'charset' => 'utf8',
-
-    // Schema cache options (for production environment)
-    //'enableSchemaCache' => true,
-    //'schemaCacheDuration' => 60,
-    //'schemaCache' => 'cache',
+    'tablePrefix' => '',
+    'enableSchemaCache' => true,
+    'schemaCacheDuration' => 3600,
 ];
