@@ -78,26 +78,6 @@ class Account extends ActiveRecord
         return $this->hasOne(Transaction::className(), ['id' => 'transaction_id']);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUsernameTo() {
-        return $this->transaction->username_to;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUsernameFrom() {
-        return $this->transaction->username_from;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTransactionAmount() {
-        return $this->transaction->amount;
-    }
 
     public function getBalance()
     {
