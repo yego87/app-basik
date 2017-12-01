@@ -2,15 +2,12 @@
 
 namespace app\modules\user\models;
 
+use app\modules\transaction\models\Account;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 class User extends ActiveRecord implements IdentityInterface
 {
-
-    //public $username;
-    //public $password;
-
     /**
      * @inheritdoc
      */
@@ -29,10 +26,29 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    /**
+     * @param $username
+     * @return null|static
+     */
     public static function findByUsername($username)
     {
-        //var_dump(self::findOne(['username' => $username]));
-        return self::findOne(['username' => $username]); //? null : new self(['username' => $username]);
+        return $user = self::findOne(['username' => $username]) ?  : self::createUser($username);
+    }
+
+    /**
+     * @param $username
+     * @return null|static
+     */
+    public static function createUser($username)
+    {
+        $user = new self(['username' => $username]);
+
+        if($user->save(true)) {
+            $account = new Account();
+            $account->createAccountWhenNewUserCreate($username);
+        }
+
+        return self::findOne(['username' => $username]);
     }
 
     /**
@@ -41,10 +57,10 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $password password to validate
      * @return bool if password provided is valid for current user
      */
-    public function validatePassword($password)
-    {
-        return $this->password === $password;
-    }
+    //public function validatePassword($password)
+    //{
+    //   return $this->password === $password;
+    //}
     /**
      * Finds an identity by the given ID.
      *

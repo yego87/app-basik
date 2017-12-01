@@ -15,11 +15,9 @@ class m171129_075750_account extends Migration
     {
         $this->createTable('{{%account}}', [
             'id' => Schema::TYPE_BIGPK,
-            'user_id' => 'varchar(255) NOT NULL',
-            'balance' => 'varchar(255) NOT NULL',
-            'transaction_id' => 'int(255) ',
-            'amount' => 'int(5) NOT NULL',
-
+            'username' => 'varchar(255) NOT NULL',
+            'balance' => 'decimal(11, 2) NOT NULL',
+            'transaction_id' => 'integer(255) NULL',
         ]);
     }
 

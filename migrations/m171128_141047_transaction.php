@@ -15,12 +15,9 @@ class m171128_141047_transaction extends Migration
     {
         $this->createTable('{{%transaction}}', [
             'id' => Schema::TYPE_BIGPK,
-            'email_to' => 'varchar(255) NOT NULL',
-            'email_from' => 'varchar(255) NOT NULL',
-            'amount' => 'int(5) NOT NULL',
-            'access_token' => 'varchar(36) DEFAULT NULL',
-            'auth_key' => 'varchar(36) DEFAULT NULL',
-
+            'username_to' => 'varchar(255) NOT NULL',
+            'username_from' => 'varchar(255) NOT NULL',
+            'amount' => 'decimal(11, 2) NOT NULL',
         ]);
 
     }

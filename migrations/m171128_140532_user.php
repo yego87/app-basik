@@ -16,12 +16,10 @@ class m171128_140532_user extends Migration
         $this->createTable('{{%user}}', [
             'id' => Schema::TYPE_BIGPK,
             'username' => 'varchar(255) NOT NULL',
-            'password' => 'varchar(255) NOT NULL',
-            //'email' => 'varchar(255) NOT NULL',
-            //'access_token' => 'varchar(36) DEFAULT NULL',
-            'auth_key' => 'varchar(36) DEFAULT NULL',
-
+            'auth_key' => 'varchar(255) DEFAULT NULL',
         ]);
+
+
 
     }
 

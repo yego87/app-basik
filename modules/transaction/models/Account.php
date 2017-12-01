@@ -2,16 +2,17 @@
 
 namespace app\modules\transaction\models;
 
-use app\modules\user\models\User;
+use Yii;
 use yii\db\ActiveRecord;
 
 /**
- * User paymant account
+ * User payment account
+ * @property $username
+ * @property $balance
  */
 class Account extends ActiveRecord
 {
-
-    public $username;
+    const DEFAULT_BALANCE = 0;
 
 	/**
 	 * @inheritdoc
@@ -27,94 +28,63 @@ class Account extends ActiveRecord
     public function rules()
     {
         return [
-            [['username'], 'required'],
+            [['username', 'balance'], 'required'],
             [['balance'], 'number'],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['username'], 'string'],
+            [['transaction_id'], 'integer']
         ];
     }
 
-
-
     /**
-	 * Getter for user name
-	 * @return string
-	 */
-	public function getUsername()
-	{
-		return $this->user ? $this->user->getUsername() : '';
-	}
-
-	/**
-	 * Find account by user id
-	 * @param int $user_id 
-	 * @param bool $forceCreate 
-	 * @return static|null
-	 */
-	public static function findByUser($user_id, $forceCreate = true)
-	{
-		$model = self::find()->where(['user_id' => $user_id])->one();
-		if ($model)
-			return $model;
-
-		if (!$forceCreate)
-			return null;
-
-		$model = new self([
-			'user_id' => $user_id,
-			'amount' => 0,
-		]);
-		$model->save(false);
-
-		return $model;
-	}
-
-    /**
-     * Add income associated with user and update amount on account
-     * @param float $amount
-     * @param string $description
-     * @param string|null $url
-     * @return void
+     * @inheritdoc
      */
-    public function addIncome($amount, $description, $url = null)
+    public function attributeLabels()
     {
-        $d = time();
-        $transaction = new Transaction([
-            'from_id' => $this->user_id,
-            'date' => gmdate('Y-m-d H:i:s', $d),
-            'year' => gmdate('Y', $d),
-            'month' => gmdate('m', $d),
-            'income' => $amount,
-            'balance' => $this->amount + $amount,
-        ]);
-        $transaction->save(false);
-
-        $this->updateCounters(['amount' => $amount]);
+        return [
+            'id' => 'ID',
+            'username' =>'Name',
+            'balance' => 'Balance',
+            'usernameFrom' => 'From user',
+            'usernameTo' => 'To user',
+        ];
     }
 
     /**
-     * Add expense associated with user and update amount on account
-     * @param float $amount
-     * @param string $description
-     * @param string|null $url
-     * @return void
+     * @param $username
      */
-    public function addTransaction($amount, $description, $url = null)
+    public function createAccountWhenNewUserCreate($username)
     {
-        $d = time();
-        $transaction = new Transaction([
-            'user_id' => $this->user_id,
-            'date' => gmdate('Y-m-d H:i:s', $d),
-            'year' => gmdate('Y', $d),
-            'month' => gmdate('m', $d),
-            'expense' => $amount,
-            'description' => $description,
-            'url' => $url,
-            'balance' => $this->amount - $amount,
+        $account = new self([
+            'username' => $username,
+            'balance' => self::DEFAULT_BALANCE
         ]);
-        $transaction->save(false);
 
-        $this->updateCounters(['amount' => -$amount]);
+        $account->save(true);
+    }
+
+    /**
+     * @return null|static
+     */
+    public function getAccount()
+    {
+        return $model = Account::findOne(['username' => Yii::$app->user->identity->username]);
     }
 
 
+    public function getTransaction()
+    {
+        return $this->hasOne(Transaction::className(), ['id' => 'transaction_id']);
+    }
+
+    public function getUsernameTo() {
+        return $this->transaction->username_to;
+    }
+
+    public function getUsernameFrom() {
+        return $this->transaction->username_from;
+    }
+
+    public function getTransactionAmount() {
+        return $this->transaction->amount;
+    }
 }

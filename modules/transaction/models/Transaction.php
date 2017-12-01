@@ -2,12 +2,16 @@
 
 namespace app\modules\transaction\models;
 
-use app\modules\user\models\User;
+
 use Yii;
 use yii\db\ActiveRecord;
 
 class Transaction extends ActiveRecord
 {
+
+    const TYPE_INCOME = 'Income';
+    const TYPE_EXPENSE = 'Expense';
+
     /**
 	 * @inheritdoc
 	 */
@@ -22,9 +26,8 @@ class Transaction extends ActiveRecord
     public function rules()
     {
         return [
-            [['email_to', 'email_from'], 'string'],
-            [['email_to', 'amount'], 'required'],
-            [['email_to', 'email_from'], 'email'],
+            [['username_to', 'username_from'], 'string'],
+            //[['type'], 'string'],
             [['amount'], 'number', 'min' => 0.01],
         ];
     }
@@ -36,22 +39,9 @@ class Transaction extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'email_from' => Yii::t('app', 'From'),
-            'email_to' => Yii::t('app', 'To'),
+            'username_to' => Yii::t('app', 'To user'),
+            'username_from' => Yii::t('app', 'From user'),
             'amount' => Yii::t('app', 'Amount'),
         ];
-    }
-
-    public function getBalance($userEmail = null)
-    {
-        if ($userEmail === null) {
-            if (!Yii::$app->user->isGuest) {
-                $userEmail = Yii::$app->user->email;
-            } else {
-                return null;
-            }
-        }
-
-        return Transaction::find()->where(['email_to' => $userEmail])->sum('amount') - Transaction::find()->where(['email_from' => $userEmail])->sum('amount');
     }
 }

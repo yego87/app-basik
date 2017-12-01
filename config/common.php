@@ -42,6 +42,8 @@ return [
                 '' => 'main/default/index',
                 'contact' => 'main/contact/index',
                 'transaction' => 'transaction/transaction/index',
+                'account' => 'transaction/account/index',
+                'listaccount' => 'transaction/account/list',
                 '<_a:error>' => 'main/default/<_a>',
                 '<_a:(login|logout)>' => 'user/default/<_a>',
 

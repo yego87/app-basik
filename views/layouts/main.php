@@ -42,6 +42,7 @@ AppAsset::register($this);
             ['label' => 'Contact', 'url' => ['/main/contact/index']],
             ['label' => 'Payment', 'url' => ['/transaction/transaction/index']],
             ['label' => 'Account', 'url' => ['/transaction/account/index']],
+            ['label' => 'List of users', 'url' => ['/transaction/account/list']],
             Yii::$app->user->isGuest ?
                 ['label' => 'Login', 'url' => ['/user/default/login']] :
                 ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
@@ -63,7 +64,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; Yegor Veselov <?= date('Y') ?></p>
 
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>

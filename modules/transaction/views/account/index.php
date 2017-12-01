@@ -1,14 +1,16 @@
 <?php
 
-use yii\widgets\DetailView;
-
+use yii\grid\GridView;
 ?>
 
-<?php
-    echo DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'balance'
-        ],
-]) ?>
+                <?= GridView::widget([
+                    'id' => 'a',
+                    'dataProvider' => $dataProvider,
+                    //'filterModel' => $searchModel,
+                    'columns' => [
+                        'username_to',
+                        'username_from',
+                        'amount'
+                    ],
+                ]);
+?>

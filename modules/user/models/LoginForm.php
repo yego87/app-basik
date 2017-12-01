@@ -17,12 +17,8 @@ class LoginForm extends Model
     public function rules()
     {
         return [
-            // username and password are both required
             [['username'], 'required'],
-            // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
-            // password is validated by validatePassword()
-            //['password'],
         ];
     }
     /**
@@ -32,15 +28,14 @@ class LoginForm extends Model
      * @param string $attribute the attribute currently being validated
      * @param array $params the additional name-value pairs given in the rule
      */
-    public function validatePassword($attribute, $params)
-    {
-        if (!$this->hasErrors()) {
-            $user = $this->getUser();
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
-            }
-        }
-    }
+    //public function validatePassword($attribute, $params)
+    //{
+    //   if (!$this->hasErrors()) {//       $user = $this->getUser();
+    //       if (!$user || !$user->validatePassword($this->password)) {
+    //           $this->addError($attribute, 'Incorrect username or password.');
+    //       }
+    //   }
+    //}
     /**
      * Logs in a user using the provided username and password.
      * @return bool whether the user is logged in successfully
@@ -52,6 +47,7 @@ class LoginForm extends Model
         }
         return false;
     }
+
     /**
      * Finds user by [[username]]
      *
@@ -61,27 +57,7 @@ class LoginForm extends Model
     {
         if ($this->_user === false) {
             $this->_user = User::findByUsername($this->username);
-            //var_dump(User::findByUsername($this->username));
         }
         return $this->_user;
-    }
-
-    /**
-     * @param bool $insert
-     * @param array $changedAttributes
-     */
-    public function afterSave($insert, $changedAttributes)
-    {
-        parent::afterSave($insert, $changedAttributes);
-
-        $user = new User();
-        $user->username = $this->username;
-        $user->save();
-
-        $account = new Account();
-        $account->balance = self::DEFAULT_BALANCE;
-        $account->username = $this->username;
-        $account->user_id = $user->id;
-        $account->save();
     }
 }

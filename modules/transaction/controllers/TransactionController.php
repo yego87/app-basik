@@ -29,9 +29,10 @@ class TransactionController extends Controller
     public function actionIndex()
     {
         $model = new TransactionForm();
-        if ($model->load(Yii::$app->request->post()) && $model->transactionCreate()) {
-            Yii::$app->session->setFlash('Thanks');
-            return $this->refresh();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->transactionCreate();
+            Yii::$app->session->setFlash('success', "Money was successfully send");
+            return $this->goHome();
         } else {
             return $this->render('index', [
                 'model' => $model,

@@ -18,13 +18,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?php $form = ActiveForm::begin(['id' => 'transaction-form']); ?>
 
-                <?= $form->field($model, 'email_to')->textInput(['autofocus' => true]) ?>
+                <?= $form->field($model, 'username_to')->textInput(['autofocus' => true]) ?>
 
                 <?= $form->field($model, 'amount')->input('int', ['rows' => 6]) ?>
 
                 <div class="form-group">
                     <?= Html::submitButton('Submit', ['class' => 'btn btn-primary', 'name' => 'contact-button']) ?>
                 </div>
+
+                <?= Yii::$app->session->getFlash('success'); ?>
 
                 <?php ActiveForm::end(); ?>
 

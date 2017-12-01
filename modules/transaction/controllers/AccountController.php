@@ -2,8 +2,9 @@
 
 namespace app\modules\transaction\controllers;
 
-use app\modules\transaction\models\Account;
+use app\modules\transaction\models\TransactionSearch;
 use Yii;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 
 /**
@@ -11,7 +12,18 @@ use yii\web\Controller;
  */
 class AccountController extends Controller
 {
-
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index'],
+                'rules' => [
+                    ['allow' => true, 'roles' => ['@']],
+                ],
+            ],
+        ];
+    }
     /**
      * List
      * @return string
@@ -19,12 +31,24 @@ class AccountController extends Controller
 
     public function actionIndex()
     {
-        $model = Account::findOne(Yii::$app->user->id);
+        $model = new TransactionSearch();
 
-        if ($model->load(Yii::$app->request->post()) ) {
-            return $this->render('index', compact('model'));
-        } else {
-            return $this->render('index', compact('model'));
-        }
+        $dataProvider = $model->search();
+
+        return $this->render('index', ['dataProvider' => $dataProvider]);
+    }
+
+    /**
+     * List
+     * @return string
+     */
+
+    public function actionList()
+    {
+        $model = new TransactionSearch();
+
+        $dataProvider = $model->searchAll();
+
+        return $this->render('list',['dataProvider' => $dataProvider]);
     }
 }

@@ -3,89 +3,129 @@
 namespace app\modules\transaction\models;
 
 use app\modules\user\models\User;
+use Yii;
+use yii\base\Model;
 use yii\db\ActiveRecord;
 
 /**
- * ContactForm is the model behind the contact form.
+ * TransactionForm is the model behind the transaction form.
  */
-class TransactionForm extends ActiveRecord
+class TransactionForm extends Model
 {
+    public $username_to;
+    public $username_from;
+    public $amount;
     /**
      * @return array the validation rules.
      */
     public function rules()
     {
         return [
-            [['email_to', 'amount'], 'required'],
-            [['amount'], 'number'],
-            ['email_from', 'email'],
-            ['email_to', 'email'],
+            [['username_to', 'amount'], 'required'],
+            [['amount'], 'number', 'min' => 0.01]
         ];
     }
 
     /**
-     * Sends an email to the specified email address using the information collected by this model.
-     * @param string $email the target email address
-     * @return bool whether the model passes validation
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => Yii::t('app', 'ID'),
+            'username_to' => Yii::t('app', 'Send to username'),
+            'amount' => Yii::t('app', 'Amount'),
+        ];
+    }
+    /**
+     * @inheritdoc
+     */
+    public function beforeValidate()
+    {
+        if (parent::beforeValidate()) {
+            if(is_null(User::findByUsername($this->username_to))){
+                User::createUser($this->username_to);
+                return true;
+            } else {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Sends an money to the specified username using the information collected by this model.
+     * @return void
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function transactionCreate()
     {
-        //if(\Yii::$app->user->isGuest) {
-            $transaction = new TransactionForm();
+        $this->addTransaction();
+        $this->addIncome($this->amount, $this->username_to);
+        $this->addExpense($this->amount);
 
-            $transaction->email_to = $this->email_to;
-            $transaction->email_from = \Yii::$app->user->username;
-            $transaction->amount = $this->amount;
-
-            $transaction->save();
-
-            $userId = User::findOne(['username' => $this->email_to]);//$this->amount
-            $account = Account::find(['user_id' => $userId]);
-            $account->balance = $account->balance - $this->amount;
-
-            $account->update(true,['balance' => $account->balance]);
-            //return true;
-   //     }else return false;
     }
 
     /**
-     * Add income associated with user and update amount on accaunt
-     * @param float $amount
-     * @param string $description
-     * @param string|null $url
+     * Add income associated with user and update amount on account
+     * @param number $amount
+     * @param $username
      * @return void
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
-    public function addIncome($amount)
+    public function addIncome($amount, $username)
     {
-        $transaction = new Transaction([
-            'user_id' => $this->user_id,
-            'balance' => $this->amount + $amount,
+        $account = Account::findOne([
+            'username' => $username,
         ]);
-        $transaction->save(false);
-        $this->updateCounters(['amount' => $amount]);
+
+        $account->balance += $amount;
+
+        $account->update(true, ['balance']);
     }
+
     /**
      * Add expense associated with user and update amount on accaunt
-     * @param float $amount
-     * @param string $description
-     * @param string|null $url
+     * @param number $amount
      * @return void
+     * @throws \Exception
+     * @throws \yii\db\StaleObjectException
      */
-    public function addExpense($amount, $description, $url = null)
+    public function addExpense($amount)
     {
-        $d = time();
-        $transaction = new Transaction([
-            'user_id' => $this->user_id,
-            'date' => gmdate('Y-m-d H:i:s', $d),
-            'year' => gmdate('Y', $d),
-            'month' => gmdate('m', $d),
-            'expense' => $amount,
-            'description' => $description,
-            'url' => $url,
-            'balance' => $this->amount - $amount,
+        $account = Account::findOne([
+            'username' => $this->getCurrentUser()->username,
         ]);
-        $transaction->save(false);
-        $this->updateCounters(['amount' => -$amount]);
+
+        $account->balance -= $amount;
+
+        $account->update(true, ['balance']);
     }
 
+    /**
+     * @return bool
+     */
+    public function addTransaction()
+    {
+        $transaction = new Transaction();
+
+        $transaction->username_from = $this->getCurrentUser()->username;
+        $transaction->username_to = $this->username_to;
+        $transaction->amount = $this->amount;
+
+        return $transaction->save();
+    }
+
+    /**
+     * @return null|\yii\web\IdentityInterface
+     */
+    public function getCurrentUser()
+    {
+        return \Yii::$app->user->identity;
+    }
 }
