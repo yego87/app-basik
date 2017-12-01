@@ -9,6 +9,10 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use app\modules\transaction\models\Account;
+
+
+$account = new Account();
 
 AppAsset::register($this);
 ?>
@@ -45,7 +49,7 @@ AppAsset::register($this);
             ['label' => 'List of users', 'url' => ['/transaction/account/list']],
             Yii::$app->user->isGuest ?
                 ['label' => 'Login', 'url' => ['/user/default/login']] :
-                ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                ['label' => 'Logout (Name: ' . Yii::$app->user->identity->username . ' Balance: ' . $account->getBalance() .')',
                     'url' => ['/user/default/logout'],
                     'linkOptions' => ['data-method' => 'post']],
         ],

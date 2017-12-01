@@ -70,21 +70,37 @@ class Account extends ActiveRecord
         return $model = Account::findOne(['username' => Yii::$app->user->identity->username]);
     }
 
-
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getTransaction()
     {
         return $this->hasOne(Transaction::className(), ['id' => 'transaction_id']);
     }
 
+    /**
+     * @return mixed
+     */
     public function getUsernameTo() {
         return $this->transaction->username_to;
     }
 
+    /**
+     * @return mixed
+     */
     public function getUsernameFrom() {
         return $this->transaction->username_from;
     }
 
+    /**
+     * @return mixed
+     */
     public function getTransactionAmount() {
         return $this->transaction->amount;
+    }
+
+    public function getBalance()
+    {
+        return $this->getAccount()->balance;
     }
 }
