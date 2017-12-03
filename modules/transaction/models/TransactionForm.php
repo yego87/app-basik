@@ -55,8 +55,6 @@ class TransactionForm extends Model
     }
 
     /**
-     * Sends an money to the specified username using the information collected by this model.
-     * @return void
      * @throws \Exception
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
@@ -66,7 +64,6 @@ class TransactionForm extends Model
         $this->addTransaction();
         $this->addIncome($this->amount, $this->username_to);
         $this->addExpense($this->amount);
-
     }
 
     /**

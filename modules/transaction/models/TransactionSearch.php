@@ -5,7 +5,7 @@ use yii\data\ActiveDataProvider;
 
 
 /**
- * Account search model
+ * Transaction search model
  * @property Transaction $username_to
  * @property Transaction $username_from
  */
@@ -14,17 +14,6 @@ class TransactionSearch extends Transaction
     public $username_to;
     public $username_from;
     public $amount;
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['username_from', 'usernameTo'], 'string'],
-            [['amount'], 'number']
-        ];
-    }
 
     /**
      * @return ActiveDataProvider

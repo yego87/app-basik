@@ -31,7 +31,7 @@ class Account extends ActiveRecord
             [['username', 'balance'], 'required'],
             [['balance'], 'number'],
             [['username'], 'string'],
-            [['transaction_id'], 'integer']
+            //[['transaction_id'], 'integer']
         ];
     }
 
@@ -71,14 +71,8 @@ class Account extends ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return mixed
      */
-    public function getTransaction()
-    {
-        return $this->hasOne(Transaction::className(), ['id' => 'transaction_id']);
-    }
-
-
     public function getBalance()
     {
         return $this->getAccount()->balance;
