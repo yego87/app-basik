@@ -18,6 +18,7 @@ class LoginForm extends Model
     {
         return [
             [['username'], 'required'],
+            [['username'], 'string', 'max' => 255],
             ['rememberMe', 'boolean'],
         ];
     }

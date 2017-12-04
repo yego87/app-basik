@@ -8,10 +8,6 @@ use yii\db\ActiveRecord;
 
 class Transaction extends ActiveRecord
 {
-
-    const TYPE_INCOME = 'Income';
-    const TYPE_EXPENSE = 'Expense';
-
     /**
 	 * @inheritdoc
 	 */
@@ -26,8 +22,7 @@ class Transaction extends ActiveRecord
     public function rules()
     {
         return [
-            [['username_to', 'username_from'], 'string'],
-            //[['type'], 'string'],
+            [['username_to', 'username_from'], 'string', 'max' => 255],
             [['amount'], 'number', 'min' => 0.01],
         ];
     }
