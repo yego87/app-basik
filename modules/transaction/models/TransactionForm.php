@@ -21,7 +21,7 @@ class TransactionForm extends Model
     {
         return [
             [['username_to', 'amount'], 'required'],
-            [['username_to'], 'string', ],
+            [['username_to'], 'validateUsername'],
             [['username_to'], 'string', 'max' => 255],
             [['amount'], 'number', 'min' => 0.01]
         ];
