@@ -17,6 +17,9 @@ return [
         'main' => [
             'class' => 'app\modules\main\Module',
         ],
+        'user' => [
+            'class' => 'app\modules\user\Module',
+        ],
         'transaction' => [
             'class' => 'app\modules\transaction\Module'
         ],
