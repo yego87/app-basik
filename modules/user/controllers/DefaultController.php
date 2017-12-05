@@ -3,7 +3,6 @@
 namespace app\modules\user\controllers;
 
 use app\modules\user\models\LoginForm;
-use app\modules\user\models\User;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;

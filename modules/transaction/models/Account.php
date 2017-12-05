@@ -30,8 +30,7 @@ class Account extends ActiveRecord
         return [
             [['username', 'balance'], 'required'],
             [['balance'], 'number'],
-            [['username'], 'string', 'max' => 255],
-            //[['transaction_id'], 'integer']
+            [['username'], 'string', 'max' => 255]
         ];
     }
 

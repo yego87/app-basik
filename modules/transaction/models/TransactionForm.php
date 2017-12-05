@@ -5,7 +5,6 @@ namespace app\modules\transaction\models;
 use app\modules\user\models\User;
 use Yii;
 use yii\base\Model;
-use yii\db\ActiveRecord;
 
 /**
  * TransactionForm is the model behind the transaction form.
@@ -22,6 +21,7 @@ class TransactionForm extends Model
     {
         return [
             [['username_to', 'amount'], 'required'],
+            [['username_to'], 'string', ],
             [['username_to'], 'string', 'max' => 255],
             [['amount'], 'number', 'min' => 0.01]
         ];
@@ -55,11 +55,13 @@ class TransactionForm extends Model
         return false;
     }
 
-    /**
-     * @throws \Exception
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
-     */
+    public function validateUsername($attribute, $params)
+    {
+        if ( $this->username_to === $this->getCurrentUser()->username) {
+            $this->addError('username_to', 'You cant send money to you self');
+        }
+    }
+
     public function transactionCreate()
     {
         $this->addTransaction();
@@ -68,7 +70,7 @@ class TransactionForm extends Model
     }
 
     /**
-     * Add income associated with user and update amount on account
+     * Add income associated with user and update balance on account
      * @param number $amount
      * @param $username
      * @return void
@@ -88,7 +90,7 @@ class TransactionForm extends Model
     }
 
     /**
-     * Add expense associated with user and update amount on accaunt
+     * Add expense associated with user and update balance on account
      * @param number $amount
      * @return void
      * @throws \Exception

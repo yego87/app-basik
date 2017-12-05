@@ -16,19 +16,6 @@ $config = [
             'enableAutoLogin' => true,
             'loginUrl' => ['user/default/login'],
         ],
-        'i18n' => [
-            'translations' => [
-                'app*' => [
-                    'class' => 'yii\i18n\PhpMessageSource',
-                    'basePath' => '@app/modules/transaction/messages',
-                    'sourceLanguage' => 'en-US',
-                    'fileMap' => [
-                        'app'       => 'app.php',
-                        'app/error' => 'error.php',
-                    ],
-                ],
-            ],
-        ],
         'errorHandler' => [
             'errorAction' => 'main/default/error',
         ],

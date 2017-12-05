@@ -9,10 +9,6 @@ $params = ArrayHelper::merge(
 
 return [
     'basePath' => dirname(__DIR__),
-    'bootstrap' => [
-        'log',
-        'app\modules\ModuleMediator'
-    ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -23,10 +19,6 @@ return [
         ],
         'transaction' => [
             'class' => 'app\modules\transaction\Module'
-        ],
-        'user' => [
-            'class' => 'app\modules\user\Module',
-            'on UserLogin' => ['app\modules\ModuleMediator', 'onUserLogin'],
         ],
         ],
     'components' => [
