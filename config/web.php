@@ -7,8 +7,6 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'app',
-    'sourceLanguage' => 'en-US',
-    'language' => 'en-US',
     'defaultRoute' => 'main/default/index',
     'components' => [
         'user' => [
